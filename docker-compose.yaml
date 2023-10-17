@@ -4,6 +4,7 @@ services:
     image: local/ckg
     build:
       context: .
+    restart: unless-stopped
     environment:
       - FUSEKI_URL=http://fuseki:3030
 
@@ -14,12 +15,14 @@ services:
       args:
         - JENA_VERSION=4.9.0
     image: fuseki
+    restart: unless-stopped
     volumes:
       - fuseki-databases:/fuseki/databases
       - ./deployment/jena-fuseki-docker/input_data:/fuseki/input_data
 
   haproxy:
     image: haproxy:2.8
+    restart: unless-stopped
     depends_on:
       certbot_self_signed:
         condition: service_completed_successfully
@@ -48,6 +51,7 @@ services:
 #    image: local/certbot_letsencrypt
 #    build:
 #      context: ./deployment/reverse_proxy/docker/certbot_letsencrypt/
+#    restart: unless-stopped
 #    depends_on:
 #      haproxy:
 #        condition: service_healthy
